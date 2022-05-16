@@ -17,10 +17,25 @@ from django.contrib import admin
 from django.urls import path, include
 
 from snippets.views import top
+from snippets import api_views as snippet_api_views
+
+snippet_list = snippet_api_views.SnippetViewSet.as_view({
+    'get': 'list',
+    'post': 'create'
+})
+
+snippet_detail = snippet_api_views.SnippetViewSet.as_view({
+    'get': 'retrieve',
+    'put': 'update',
+    'patch': 'partial_update',
+    'delete': 'destroy'
+})
 
 urlpatterns = [
     path('', top, name='top'),
     path('snippets/', include('snippets.urls')),
     path('admin/', admin.site.urls),
-    path('accounts/', include("accounts.urls"))
+    path('accounts/', include("accounts.urls")),
+    path('api/snippets/', snippet_list, name='snippet_list'),
+    path('api/snippets/<int:pk>/', snippet_detail, name='snippet_detail'),
 ]
